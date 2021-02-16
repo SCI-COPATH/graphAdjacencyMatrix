@@ -1,5 +1,7 @@
 #include <stdio.h>
 #define MAX 10
+int top=-1;
+int stack[MAX];
 int graph[20][20];
 int frond=-1,rear=-1;
 int queue[MAX];
@@ -11,8 +13,8 @@ int isNull(){
 }
 void enQueue(int value){
     if(isNull()==1){
-        frond=1;
-        rear=1;
+        frond=0;
+        rear=0;
     }
     else{
         rear=(rear+1)%MAX;
@@ -32,6 +34,17 @@ int deQueue(){
         int data=queue[frond];
         frond=(frond+1)%MAX;
         return data;
+    }
+}
+void push(int data){
+    if(top<MAX-1){
+        stack[++top]=data;
+    }
+}
+int pop(){
+    if(top!=-1){
+        top--;
+    return stack[top+1];
     }
 }
 void viewGraph(int n){
@@ -71,6 +84,30 @@ void BFS(int n){
     }
     printf("\n");
 }
+void DFS(int n){
+    printf("DFS : ");
+    int i,flag;
+    for(i=0;i<n;i++)
+        ar[i]=0;
+    push(0);
+    ar[0]=1;
+    printf("%d,",0);
+    while(top!=-1){
+        flag=0;
+        for(i=0;i<n;i++){
+            if(graph[stack[top]][i]==1&&ar[i]==0){
+                printf("%d,",i);
+                ar[i]=1;
+                push(i);
+                flag=1;
+                break;
+            }
+        }
+        if(flag==0)
+            pop();
+    }
+    printf("\n");
+}
 void main(){
     int n;
     printf("Enter Maximam Elements of graphs\n");
@@ -79,7 +116,7 @@ void main(){
     for(i=0;i<n;i++)
         for(j=0;j<n;j++)
             graph[i][j]=0;
-    printf("1-Add Element\n2-Delete Elements\n3-BFS\n4-View\n5-Exit");
+    printf("1-Add Element\n2-Delete Elements\n3-BFS\n4-DFS\n5-View\n6-Exit");
     do{
         printf("\nEnter Choice : ");
         scanf("%d",&dis);
@@ -98,10 +135,12 @@ void main(){
                     break;
             case 3: BFS(n);
                     break;
-            case 4:viewGraph(n);
+            case 4:DFS(n);
                     break;
-            case 5:break;
+            case 5:viewGraph(n);
+                    break;
+            case 6:break;
         }
 
-    }while(dis!=5);
+    }while(dis!=6);
 }
